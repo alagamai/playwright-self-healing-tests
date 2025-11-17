@@ -107,3 +107,8 @@ npx playwright show-report
 * AI auto-healing broken tests
 * Hands-free, low-maintenance, modern test automation
 
+<p align="center">
+  <img src="image/Playwright%20Test%20Demo%20Page.png" width="600">
+</p>
+
+
