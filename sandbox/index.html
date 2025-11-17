@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playwright Test Demo Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7ff;
+      padding: 30px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #5a00d4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #e8efff;
+    }
+
+    .color-boxes {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .box {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .box:hover {
+      border-color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Playwright Testing Sandbox</h1>
+
+  <div class="container">
+
+    <!-- User Form -->
+    <div class="section">
+      <h3>User Form</h3>
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Enter your name" />
+
+      <label for="role">Role</label>
+      <select id="role">
+        <option value="tester">QA Tester</option>
+        <option value="developer">Developer</option>
+        <option value="manager">Manager</option>
+      </select>
+
+      <button id="submit-btn">Submit</button>
+    </div>
+
+    <!-- Color Picker -->
+    <div class="section">
+      <h3>Color Picker</h3>
+      <div class="color-boxes">
+        <div class="box color-item" id="color-1" style="background:#ff7676"></div>
+        <div class="box color-item duplicate" style="background:#ffb84d"></div>
+        <div class="box color-item duplicate" style="background:#6edb8f"></div>
+        <div class="box color-item" id="color-4" style="background:#6aa9ff"></div>
+      </div>
+    </div>
+
+    <!-- Flaky Locator -->
+    <div class="section">
+      <h3>Flaky Locator Button (Strict Mode Fail Guaranteed)</h3>
+      <p>This button’s id <strong>AND text</strong> change randomly. A second visible button mirrors the text, causing strict-mode violations.</p>
+
+      <!-- MAIN FLAKY BUTTON -->
+      <button id="flaky-btn" class="flaky-text">Flaky Button</button>
+
+      <!-- DECOY BUTTON (VISIBLE + SAME TEXT) -->
+      <button id="decoy-btn" class="flaky-text">Flaky Button</button>
+
+    </div>
+
+    <!-- Random Text Section -->
+    <div class="section">
+      <h3>Random Text</h3>
+      <button id="text-btn">Generate Text</button>
+      <p id="generated-text"></p>
+    </div>
+
+  </div>
+
+  <!-- FULL SCRIPT -->
+  <script>
+    // --- Form functionality ---
+    document.getElementById('submit-btn').addEventListener('click', () => {
+      const name = document.getElementById('name').value;
+      const role = document.getElementById('role').value;
+      alert(`Hello ${name}, role: ${role}`);
+    });
+
+    // --- Color boxes ---
+    document.querySelectorAll('.color-item').forEach(box => {
+      box.addEventListener('click', () => {
+        alert('Color selected: ' + box.style.background);
+      });
+    });
+
+    // --- Random text ---
+    document.getElementById('text-btn').addEventListener('click', () => {
+      const randomText = Math.random().toString(36).substring(2, 10);
+      document.getElementById('generated-text').textContent = randomText;
+    });
+
+    // ========================================================
+    //    FLAKY BUTTON (STRICT MODE FAIL GUARANTEED)
+    // ========================================================
+
+    const flaky = document.querySelector('#flaky-btn');
+    const decoy = document.querySelector('#decoy-btn');
+
+    const possibleIds = ['flaky-btn', 'dynamic-btn', 'weird-btn'];
+    const textOptions = ["Flaky Button", "Click Me", "Dynamic Button", "Press Here"];
+
+    // Change ID every 150ms
+    setInterval(() => {
+      const newId = possibleIds[Math.floor(Math.random() * possibleIds.length)];
+      flaky.id = newId;
+    }, 150);
+
+    // Change TEXT on BOTH buttons every 150ms
+    setInterval(() => {
+      const newText = textOptions[Math.floor(Math.random() * textOptions.length)];
+      flaky.textContent = newText;
+      decoy.textContent = newText;
+    }, 150);
+
+  </script>
+
+</body>
+</html>
+
